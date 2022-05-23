@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script th:src="@{/jquery-3.6.0.js}"></script>
+</head>
+<script>
+    function login(){
+        let username = document.getElementById("username").value;
+        let password = document.getElementById("password").value;
+
+        console.log(username);
+        console.log(password);
+
+        $.ajax({
+            url: "/index/loginCheck",
+            type: "post",
+            data: {"username": username, "password": password},
+            dataType: "json",
+            success: function (val){
+                if(val.success == "1"){
+                    alert(val.message);
+                }else{
+                    alert(val.errorMessage);
+                }
+            }
+        })
+    }
+</script>
+<body>
+    <div style="width: 100%; height: 600px;">
+        <div style="width: 80%; height: 500px; margin-left: 10%; margin-top: 50px; border: 5px solid rgb(109,179,63); border-radius: 10px;">
+            <div style="width: 100%; height: 30px; float: left; text-align: center; margin-top: 50px;">
+                <span style="font-weight: bold;">用户名：</span>
+                <input type="text" id="username" value="">
+            </div>
+            <div style="width: 100%; height: 30px; float: left; text-align: center; margin-top: 50px;">
+                <span style="font-weight: bold;">密&emsp;码：</span>
+                <input type="password" id="password" value="">
+            </div>
+            <div style="width: 100%; height: 30px; float: left; text-align: center; margin-top: 50px;">
+                <div onclick="login()" style="margin: 0 auto; width: 100px; height: 30px; text-align: center; border-radius: 5px; background-color: rgb(109,179,63); cursor: pointer;">
+                    <span style="font-weight: bold; color: white; line-height: 30px;">登录</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
