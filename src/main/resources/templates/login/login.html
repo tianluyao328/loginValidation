@@ -10,17 +10,14 @@
         let username = document.getElementById("username").value;
         let password = document.getElementById("password").value;
 
-        console.log(username);
-        console.log(password);
-
         $.ajax({
             url: "/index/loginCheck",
             type: "post",
             data: {"username": username, "password": password},
             dataType: "json",
             success: function (val){
-                if(val.success == "1"){
-                    alert(val.message);
+                if(val.isSuccess == "1"){
+                    window.location.href = "/index/index";
                 }else{
                     alert(val.errorMessage);
                 }

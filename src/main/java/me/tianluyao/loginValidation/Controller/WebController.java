@@ -9,6 +9,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.time.Duration;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
@@ -30,9 +33,14 @@ public class WebController {
         return "login/login";
     }
 
+    @RequestMapping("index")
+    public String index(){
+        return "index";
+    }
+
     @ResponseBody
     @RequestMapping("loginCheck")
-    public String loginCheck(HttpServletRequest request) throws JsonProcessingException {
+    public String loginCheck(HttpServletRequest request, HttpServletResponse response) throws IOException {
         String userName = request.getParameter("username");
         String passWord = request.getParameter("password");
 
@@ -43,13 +51,19 @@ public class WebController {
         ObjectMapper objectMapper = new ObjectMapper();
 
         if(rightUserName.equals(userName) && rightPassWord.equals(passWord)){
-            String key = "user:"+ UUID.randomUUID()+"";
+            String token = "user:"+ UUID.randomUUID()+"";
+
+            emRedisTemplate.opsForValue().set(token, rightUserName, Duration.ofMinutes(30L));
+            Long expire = emRedisTemplate.getExpire(token);
+
+            request.getSession().setAttribute("token", token);
 
             resultMap.put("code", "200");
             resultMap.put("isSuccess", "1");
             resultMap.put("errorCode", "00000");
             resultMap.put("errorMessage", "登录成功");
             resultMap.put("message", "登录成功");
+            resultMap.put("token", token);
         }else{
             resultMap.put("code", "200");
             resultMap.put("isSuccess", "0");
