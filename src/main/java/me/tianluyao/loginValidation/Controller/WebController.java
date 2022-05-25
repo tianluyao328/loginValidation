@@ -1,6 +1,5 @@
 package me.tianluyao.loginValidation.Controller;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -22,11 +21,6 @@ public class WebController {
 
     @Autowired
     private RedisTemplate emRedisTemplate;
-
-    @RequestMapping("test")
-    public String testPage(){
-        return "test/test";
-    }
 
     @RequestMapping("login")
     public String login(){
@@ -53,8 +47,8 @@ public class WebController {
         if(rightUserName.equals(userName) && rightPassWord.equals(passWord)){
             String token = "user:"+ UUID.randomUUID()+"";
 
+            //将生成的token放到redis里，设置过期时间为30分钟
             emRedisTemplate.opsForValue().set(token, rightUserName, Duration.ofMinutes(30L));
-            Long expire = emRedisTemplate.getExpire(token);
 
             request.getSession().setAttribute("token", token);
 

@@ -6,6 +6,11 @@ import org.springframework.web.servlet.config.annotation.InterceptorRegistration
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
+/**
+ * @Author tianluyao
+ * @Description 拦截器配置文件
+ * @Date 8:56 2022/5/25
+ **/
 @Configuration
 public class LoginConfig implements WebMvcConfigurer {
 
@@ -16,7 +21,7 @@ public class LoginConfig implements WebMvcConfigurer {
         registration.addPathPatterns("/**"); //所有路径都被拦截
         registration.excludePathPatterns(    //添加不拦截路径
                 "/index/login",                    //登录路径
-                "/index/loginCheck",
+                "/index/loginCheck",        //登录验证接口
                 "/**/*.html",                //html静态资源
                 "/**/*.js",                  //js静态资源
                 "/**/*.css"                  //css静态资源

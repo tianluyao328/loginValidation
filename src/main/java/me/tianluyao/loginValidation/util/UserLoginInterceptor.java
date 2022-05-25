@@ -1,6 +1,5 @@
 package me.tianluyao.loginValidation.util;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.ModelAndView;
@@ -8,16 +7,22 @@ import org.springframework.web.servlet.ModelAndView;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+/**
+ * @Author tianluyao
+ * @Description 拦截器验证token
+ * @Date 8:53 2022/5/25
+ **/
 public class UserLoginInterceptor implements HandlerInterceptor {
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
+        System.out.println("执行了拦截器的preHandle方法");
         try {
             String token = "";
 
+            //一般的接口请求，或者本系统对数据的请求都放在header中
             if(request.getHeader("token") == null){
-                System.err.println("session="+request.getSession());
-                System.err.println("session="+request.getSession().getAttribute("token"));
+                //如果header中没有，则去session里去找
                 if(request.getSession().getAttribute("token") == null){
                     response.sendRedirect(request.getContextPath() + "login");
                     return false;
@@ -36,14 +41,10 @@ public class UserLoginInterceptor implements HandlerInterceptor {
             }else{
                 response.sendRedirect(request.getContextPath() + "login");
             }
-
-//            response.sendRedirect(request.getContextPath() + "login");
         } catch (Exception e) {
-            e.printStackTrace();
+            response.sendRedirect(request.getContextPath() + "login");
         }
         return false;
-        //如果设置为false时，被请求时，拦截器执行到此处将不会继续操作
-        //如果设置为true时，请求将会继续执行后面的操作
     }
 
     /***
